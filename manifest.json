@@ -1,0 +1,21 @@
+{
+  "name": "Request Modifier Extension",
+  "version": "1.0",
+  "manifest_version": 3,
+  "description": "Use declarativeNetRequest to modify request headers.",
+  "permissions": [
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset_1",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  }
+}

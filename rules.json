@@ -1,0 +1,70 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "oai-device-id",
+          "operation": "set",
+          "value": "00c97092-a37e-41ca-952d-95f72c893404"
+        },
+        {
+          "header": "oai-echo-logs",
+          "operation": "set",
+          "value": "0,382,1,2826,0,3888,0,6400,1,360401,0,360673,1,361395,0,362250,1,418151,0,434837"
+        },
+        {
+          "header": "oai-language",
+          "operation": "set",
+          "value": "en-US"
+        },
+        {
+          "header": "priority",
+          "operation": "set",
+          "value": "u=1, i"
+        },
+        {
+          "header": "openai-sentinel-chat-requirements-token",
+          "operation": "set",
+          "value": "gAAAAABnX1JDydgq41OmR6pgQZA-9f2XXK6XqVvS9Ngjs_3jfh4gdMXa3MMpbufW4VudCZz5_w6yE0zqHKeSyGuoa3iQyMH-i1fwIdBjDU2-YcLEC_LavMJS7TpUAxHhog3wKoCoHhobBUmAHQEK_8DpP_jUVpWUMzjtdvO9VGNqiytRtVJZM3qZkVP4wJHp7wxAprv8dxkVvsvUvSyGsB9zke6dkU6t6JsKPwwDlKg-42SpQl1T1q2NoJne2KY3xea5X6XdKfCTjHBL9gAQHmtBIgSskz-2sthrrIvnWvLmAH6MYzVsm4_T4NGDYFXohZ8_nOBiniWTToGoaYBAO3lkP5a4-VCwTDXlYUcDuOyGgflgSHWWBSlVpcVRZ_cW8LZxqcmDPkU3oKWf_SpZpKMW4qZgCuLo5jJTUDc7Ys9B5ASse2lV-XTDue7Y8OpHFqk472pZpFG7ywNZ9mVDwf_TCbsVdkPq2TYmuZR2Y7tOMAyvlkGGa7qXEN6PbYr1NVO1ZcBu75zw4vAQ44m8vxP2tZohBCQsbNa3mybRHPAavt842FePC9hYEF3HyIOuQSO9_xHKGV1UarT6bdYR-HJ0cp0BJPNnLkft8mzFZ-i3Nxrb3FDg9TxgeJj39Y6Z6x3Pr86cNt8pjtSX8u1aZU-r89XKu_HSQvaBrVr4HnqMmlysvlBz1M9vICY3xD3n9dFSXis4Akn1q6VbcVuQfBGhVPqMIGPDH_PKjBG6v_zIzeAqhTY1fmuwU_OMFWF9B_SQzSg3eq9bh7rLCJnBvr8M9ZJVhG_EYPBgJ6ajRj2ATFp4pVW1fKWC6eCKtNuCmL6LgHx06nqE0B5zQCMLhaisaYEbcClU7IRxeS-61DsgrUFqW3cWZtceORDkmZyc3CE-LVd3MiXzKF1vspAj0387EDDKsKop7CW2jqvBNH_pfHUZAUF34lAXM5LcoCFb57kZHXsF85Hhw3pk5rAr_ykZ7hV-jrwiEhs3LuxTuvDIeoSZGTdfLEP4Ftqe4CpenCtHTY4ilgChH6SEs0OrRjEVmPlTeQLngx3WWnBS3Tju8momRp4-qzkJ_I2K3-y6apY-tFFUhf7maPI1rPV7jPIUw0qR3g0bYSpNpazX3sVEaGFADbmu-8baNO3JEm_NtDxyXL87BJ7Cl47eILlZI8OJlhWguWM1EmcufpKtTweCfaDVIIBUJc4KIQaxe0FK7Nw6jIar6o93gkteyuew4wvgyhDpGEYVJW00FmPQ_Bjzk4n80E26Cy3GO4bbUhNTLr4lpSlK26MKPhOOjo5bTHiaf8f7TkahCjxmDyq4zTXtlFBhaUi146-0iByYputPywjEN99a284-wTpVyUNgGihe4RKTtsfo2yIjK105Zf7_SZCvvzy61gAUgj1jDAeOKouNaf1wqmeZM58v2bRiGTWKteMfoJ_fmTKhY-SUd6WdAM7jS0p19Zsx2RddKmFEkvj5LrhdYEk5U9DybEOZyMN-Vb2YGMzmYb09TZ7QTFu64FyYYPTxeKYNTdyhNwjR9yVITFYmMd1iSktZi8fSMAGuwwISvMFHkPQWf_gZb0SDdX3meyi9LceEVjAeMbZJdlqi19OUJzcLiTS1QfwonGgd1izsDCWq-oCzSUXylbZNDcoi_U32BxByRsnRQZQ8b8_QkXMhu_rqjfZ88eUUUjlhlsfzOFV1bhb6GiMZ_rIdTVxWpQtmdqW5JY5Xvvs3loYc7ENw-brpkT0y864c5Oj3ZWCY0gzGtg=="
+        },
+        {
+          "header": "openai-sentinel-proof-token",
+          "operation": "set",
+          "value": "gAAAAABWzIwMzAsIk1vbiBEZWMgMTYgMjAyNCAxMTowMzo0NyBHTVQrMTMwMCAoTmV3IFplYWxhbmQgRGF5bGlnaHQgVGltZSkiLG51bGwsMCwiTW96aWxsYS81LjAgKE1hY2ludG9zaDsgSW50ZWwgTWFjIE9TIFggMTBfMTVfNykgQXBwbGVXZWJLaXQvNjA1LjEuMTUgKEtIVE1MLCBsaWtlIEdlY2tvKSBWZXJzaW9uLzE4LjIgU2FmYXJpLzYwNS4xLjE1IixudWxsLCJwcm9kLWZlMTYyZmU4OWM4ZWNiNjE2YWMxNzFiNDZjZWM1Yzg1MTZkNjNmYzUiLCJlbi1VUyIsImVuLVVTIiwxLCJsYW5ndWFnZeKIkmVuLVVTIiwibG9jYXRpb24iLCJvbndoZWVsIiw4NTU4LCIxN2I1OWY1OC1iYzg2LTRiNDMtYTE3OC1iMWVlMDNmYWRhOWEiLCIiLDgsMTczNDMwMDIxOTA5NF0="
+        },
+        {
+          "header": "openai-sentinel-turnstile-token",
+          "operation": "set",
+          "value": "ShccAxcBBwwMG3B3XVd7Vl5sdGsFcm1nfHd9SW9zcGR7UBsdFxcEFwEDDAwbZwRNB2gAWlZlUllcS1x4CBcCFAofDRwUAxNURlVaZ0JFcH1JRXpyaHBlaVFwdXZZZHdzYx56e1paa3VBfG9/c3dnbXxaeGAEeFJ+YEJMcmh8V2ZRYHt2b2N0dl1dd3hZBXd3eFZ7ZlFgU1dvCwQTGQwBAB8BFhQDE2xDcE9oWF4CWl9zGFJXewV3W1VAb3ZGAVUGGwZYXFEaVGFjW3d+XQBXQ2wPVGJaBlhfUm1wbwRgfE5VaGR7YF12Y3hna11FGWBVZ2R/W3d6Y2hze2AFXmNrRntYY3hZZXRwe0RQHAZdVGMfWF9db0ZiUntTdmNrUlBFc3tzBB9ue1pCa25oUmxpZwFzY3xRWGR0H2J+c297cm94bH13AXp3f053c1JWYHhJXXZwbntdTARzQFBmfEFUW3RPXXZ/XldUZwNIfl0aUWlGAGhbRkxcZkFeVXFkb3pgSWBjaEJYdgReU2sATXpgb3N3fQdwZGRCdHdjc1ZwfmRzdmN7BGB2XWN6fUJsaWNbVnxrZFFrbnx7BXleSXpjaGRaZ2NrUG93RW1lCFlteQZzYG1CQl12BV5jaGdFSGAIa3JvWlVoYmxecmkEHlJsY0ZhYU5kc3pge1V3QndcZ2NGZ3hGCBMUFRMNFxgJCRcUFHhwdG93eHB0b3d4cHRvd3hwdG93eHB0bxQVEwIADhsLF3Ryd0NseWdDZll4c2haBRcUFRMBHRgBBBcUFGpZUXlweHx3aWdBYXJZRXt3UndgfAF/ZmNSAG9oTmh0dnwOfXZkTXR7VnRtcH93YHZzVVRhfHtpeUIaYHwBc2xkUUJ5b2RgdnN8eHFjBGhka2NWe3R4WlNvTlJ5dH9veHBdfFRhWnNPYW9gYWpOVmF0fAZhYFlgUGtjVnt0UmAIDEs="
+        },
+        {
+          "header": "User-Agent",
+          "operation": "set",
+          "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Safari/605.1.15"
+        },
+        {
+          "header": "Accept",
+          "operation": "set",
+          "value": "text/event-stream"
+        },
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://chatgpt.com/?model=o1-pro"
+        },
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://chatgpt.com"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "https://chatgpt.com/backend-alt/conversation",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]
