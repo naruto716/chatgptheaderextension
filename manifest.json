@@ -1,21 +1,20 @@
 {
   "name": "Request Modifier Extension",
   "version": "1.0",
-  "manifest_version": 3,
-  "description": "Use declarativeNetRequest to modify request headers.",
+  "manifest_version": 2,
+  "description": "Bypass OpenAI's account sharing detection by modifying request headers.",
   "permissions": [
-    "declarativeNetRequest",
-    "declarativeNetRequestWithHostAccess",
-    "declarativeNetRequestFeedback",
-    "storage"
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "proxy",
+    "<all_urls>"
   ],
-  "host_permissions": [
-    "https://chatgpt.com/*"
-  ],
-  "action": {
-    "default_popup": "popup.html"
-  },
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
   }
 }
