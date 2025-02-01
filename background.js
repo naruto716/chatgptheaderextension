@@ -51,17 +51,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
       }
     }
     
-    // If a header is missing, add it.
-    if (!hasDeviceId) {
-      headers.push({ name: 'oai-device-id', value: deviceId });
-    }
-    if (!hasOaiLanguage) {
-      headers.push({ name: 'oai-language', value: 'en-US' });
-    }
-    if (!hasUserAgent) {
-      headers.push({ name: 'User-Agent', value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36' });
-    }
-    
     return { requestHeaders: headers };
   },
   { urls: ["https://chatgpt.com/backend-api/conversation*"] },
