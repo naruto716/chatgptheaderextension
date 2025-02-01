@@ -100,6 +100,8 @@ function setupProxyFromStorage() {
   chrome.storage.sync.get(['proxyEnabled', 'proxySettings'], function(result) {
     // Default values
     let enabled = (result.proxyEnabled === undefined) ? true : result.proxyEnabled;
+    // If anyone ever finds this repo, please refrain from abusing the shared proxy.
+    // I don't mind if you use it reasonably.
     let config = result.proxySettings || {
       ip: '34.94.178.166',
       port: 3128,
@@ -135,7 +137,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
       const match = urlObj.pathname.match(/^\/c\/([a-z0-9\-]+)/i);
       if (match && match[1]) {
         const conversationId = match[1];
-        chrome.storage.local.get({ conversations: [] }, function(result) {
+        chrome.storage.sync.get({ conversations: [] }, function(result) {
           let conversations = result.conversations;
           if (!conversations.includes(conversationId)) {
             console.log("Conversation ID saved:", conversationId);
@@ -143,7 +145,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
             if (conversations.length > 300) {
               conversations = conversations.slice(conversations.length - 300);
             }
-            chrome.storage.local.set({ conversations: conversations });
+            chrome.storage.sync.set({ conversations: conversations });
           }
         });
       }

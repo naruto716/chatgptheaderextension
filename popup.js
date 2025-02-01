@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const proxyPasswordInput = document.getElementById('proxyPassword');
     const saveProxyButton = document.getElementById('saveProxyButton');
 
-    const statusDiv = document.getElementById('status');
+    // We'll use #toast for our notifications now
+    const toastDiv = document.getElementById('toast');
 
     const ownConversationsOnlyCheckbox = document.getElementById('ownConversationsOnly');
     const clearConversationsButton = document.getElementById('clearConversationsButton');
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         deviceIdInput.value = result.deviceId || defaultDeviceId;
     });
 
-    // Load proxy settings from storage or use defaults
+    // Load proxy settings
     chrome.storage.sync.get(['proxyEnabled', 'proxySettings'], (result) => {
         const enabled = result.proxyEnabled === undefined ? true : result.proxyEnabled;
         const proxySettings = result.proxySettings || defaultProxySettings;
@@ -42,7 +43,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load saved setting for own conversations only
     chrome.storage.sync.get(['ownConversationsOnly'], (result) => {
-        ownConversationsOnlyCheckbox.checked = result.ownConversationsOnly !== undefined ? result.ownConversationsOnly : true;
+        ownConversationsOnlyCheckbox.checked = result.ownConversationsOnly !== undefined
+            ? result.ownConversationsOnly
+            : true;
     });
 
     // Save Device ID
@@ -50,19 +53,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const deviceId = deviceIdInput.value.trim();
         
         if (!deviceId) {
-            alert('Please enter a valid device ID');
+            showToast('Please enter a valid device ID', true);
             return;
         }
 
         // Validate device ID format
         const deviceIdRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         if (!deviceIdRegex.test(deviceId)) {
-            alert('Please enter a device ID in the correct format (e.g., 9b651939-97c7-43fe-9aec-80960cb88ff1)');
+            showToast('Please use the correct UUID format', true);
             return;
         }
 
         await chrome.storage.sync.set({ deviceId });
-        displayStatus();
+        showToast('Device ID saved!');
     });
 
     // Save Proxy Settings
@@ -74,29 +77,47 @@ document.addEventListener('DOMContentLoaded', async () => {
         const password = proxyPasswordInput.value;
 
         if (enabled && (!ip || !port)) {
-            alert('Please enter a valid proxy IP and port.');
+            showToast('Please enter a valid proxy IP and port.', true);
             return;
         }
 
         const proxySettings = { ip, port, username, password };
-
         await chrome.storage.sync.set({
             proxyEnabled: enabled,
             proxySettings: proxySettings
         });
-        displayStatus();
+        showToast('Proxy settings saved!');
     });
 
     ownConversationsOnlyCheckbox.addEventListener('change', async () => {
         const checked = ownConversationsOnlyCheckbox.checked;
         await chrome.storage.sync.set({ ownConversationsOnly: checked });
-        displayStatus();
+        showToast('Conversation preference updated!');
     });
 
-    function displayStatus() {
-        statusDiv.style.display = 'block';
+    // Clear stored conversations
+    clearConversationsButton.addEventListener('click', async () => {
+        await chrome.storage.sync.remove('conversations');
+        showToast('Conversations cleared!');
+    });
+
+    /**
+     * Displays a toast message.
+     * @param {string} message - The message to be displayed in the toast.
+     * @param {boolean} [isError=false] - Whether this is an error message (changes the color).
+     */
+    function showToast(message, isError = false) {
+        toastDiv.textContent = message;
+        
+        // Use bright green (#28a745) for success and red (#D9534F) for error
+        toastDiv.style.backgroundColor = isError ? '#D9534F' : '#28a745';
+
+        // Show the toast
+        toastDiv.classList.add('show');
+
+        // Hide after 3 seconds
         setTimeout(() => {
-            statusDiv.style.display = 'none';
-        }, 2000);
+            toastDiv.classList.remove('show');
+        }, 3000);
     }
 }); 

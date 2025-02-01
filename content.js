@@ -12,19 +12,23 @@ chrome.storage.sync.get(['ownConversationsOnly'], (result) => {
 chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.ownConversationsOnly) {
       showOwnConversationsOnly = changes.ownConversationsOnly.newValue;
-      location.reload();
+      if (showOwnConversationsOnly) {
+        const listItem = document.querySelector(`li[data-testid*="history-item"]`);
+        if (listItem) {
+            const parentElement = listItem.parentElement.parentElement.parentElement;
+            deleteListItemsNotInStorage(parentElement);
+        }   
+      }
     }
   });
   
 
 function deleteListItemsNotInStorage(parentElement) {
-    // If the user hasn't enabled "own conversations only", skip removing items
-    if (!showOwnConversationsOnly) {
-        return;
-    }
+    if (!showOwnConversationsOnly) return;
 
-    chrome.storage.local.get({ conversations: [] }, function(result) {
+    chrome.storage.sync.get({ conversations: [] }, function(result) {
         const storedConversations = result.conversations;
+        // console.log("Result", storedConversations);
         // Select all the <li> elements whose data-testid starts with "history-item"
         const listItems = parentElement.querySelectorAll('li[data-testid^="history-item"]');
 
