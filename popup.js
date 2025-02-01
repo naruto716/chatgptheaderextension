@@ -1,15 +1,44 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const deviceIdInput = document.getElementById('deviceId');
-    const saveButton = document.getElementById('saveButton');
+    const saveDeviceButton = document.getElementById('saveDeviceButton');
+
+    const proxyEnabledCheckbox = document.getElementById('proxyEnabled');
+    const proxyIpInput = document.getElementById('proxyIp');
+    const proxyPortInput = document.getElementById('proxyPort');
+    const proxyUsernameInput = document.getElementById('proxyUsername');
+    const proxyPasswordInput = document.getElementById('proxyPassword');
+    const saveProxyButton = document.getElementById('saveProxyButton');
+
     const statusDiv = document.getElementById('status');
 
-    // Load saved device ID
-    const result = await chrome.storage.sync.get('deviceId');
-    if (result.deviceId) {
-        deviceIdInput.value = result.deviceId;
-    }
+    // Set default values
+    const defaultDeviceId = '9b651939-97c7-43fe-9aec-80960cb88ff3';
+    const defaultProxySettings = {
+        ip: '34.94.178.166',
+        port: 3128,
+        username: 'openaiisbad',
+        password: 'openaiisbad'
+    };
 
-    saveButton.addEventListener('click', async () => {
+    // Load saved device ID or use default
+    chrome.storage.sync.get(['deviceId'], (result) => {
+        deviceIdInput.value = result.deviceId || defaultDeviceId;
+    });
+
+    // Load proxy settings from storage or use defaults
+    chrome.storage.sync.get(['proxyEnabled', 'proxySettings'], (result) => {
+        const enabled = result.proxyEnabled === undefined ? true : result.proxyEnabled;
+        const proxySettings = result.proxySettings || defaultProxySettings;
+
+        proxyEnabledCheckbox.checked = enabled;
+        proxyIpInput.value = proxySettings.ip;
+        proxyPortInput.value = proxySettings.port;
+        proxyUsernameInput.value = proxySettings.username;
+        proxyPasswordInput.value = proxySettings.password;
+    });
+
+    // Save Device ID
+    saveDeviceButton.addEventListener('click', async () => {
         const deviceId = deviceIdInput.value.trim();
         
         if (!deviceId) {
@@ -24,30 +53,36 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Save to storage
         await chrome.storage.sync.set({ deviceId });
+        displayStatus();
+    });
 
-        // Update the rules
-        const response = await fetch(chrome.runtime.getURL('rules.json'));
-        const rules = await response.json();
-        
-        // Update the device ID in the rules
-        rules[0].action.requestHeaders.forEach(header => {
-            if (header.header === 'oai-device-id') {
-                header.value = deviceId;
-            }
+    // Save Proxy Settings
+    saveProxyButton.addEventListener('click', async () => {
+        const enabled = proxyEnabledCheckbox.checked;
+        const ip = proxyIpInput.value.trim();
+        const port = parseInt(proxyPortInput.value.trim(), 10);
+        const username = proxyUsernameInput.value.trim();
+        const password = proxyPasswordInput.value;
+
+        if (enabled && (!ip || !port)) {
+            alert('Please enter a valid proxy IP and port.');
+            return;
+        }
+
+        const proxySettings = { ip, port, username, password };
+
+        await chrome.storage.sync.set({
+            proxyEnabled: enabled,
+            proxySettings: proxySettings
         });
+        displayStatus();
+    });
 
-        // Update the dynamic rules
-        await chrome.declarativeNetRequest.updateDynamicRules({
-            removeRuleIds: rules.map(rule => rule.id),
-            addRules: rules
-        });
-
-        // Show success message
+    function displayStatus() {
         statusDiv.style.display = 'block';
         setTimeout(() => {
             statusDiv.style.display = 'none';
         }, 2000);
-    });
+    }
 }); 

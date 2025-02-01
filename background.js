@@ -1,3 +1,4 @@
+
 // --- Global device ID logic ---
 
 // Set a default device id (as in your previous rules.json)
@@ -68,21 +69,20 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 );
 
 // --- Proxy setup ---
-function setupHardcodedProxy() {
-  // Hardcoded proxy information
-  const ip = '34.94.178.166';
-  const port = 3128;
-  const username = 'openaiisbad';
-  const password = 'openaiisbad';
-  
-  // Use a PAC (Proxy Auto-Config) script to proxy only requests to chatgpt.com
-  const pacScript = {
-    data: "function FindProxyForURL(url, host) { " + 
-          "if (shExpMatch(host, '*chatgpt.com')) { " +
-              "return 'PROXY " + ip + ":" + port + "'; " +
+
+// This function applies proxy settings based on the provided configuration
+function setupProxy(config) {
+  var ip = config.ip || '34.94.178.166';
+  var port = config.port || 3128;
+  var username = config.username || 'openaiisbad';
+  var password = config.password || 'openaiisbad';
+  var pacScript = {
+    data: "function FindProxyForURL(url, host) { " +
+          "if (shExpMatch(host, '*chatgpt.com') || shExpMatch(host, '*whatismyip.com')) { " +
+          "return 'PROXY " + ip + ":" + port + "'; " +
           "} " +
           "return 'DIRECT'; " +
-    "}"
+          "}"
   };
 
   chrome.proxy.settings.set({ 
@@ -92,7 +92,7 @@ function setupHardcodedProxy() {
     },
     scope: 'regular'
   }, function() {
-    console.log('PAC proxy settings applied for chatgpt.com');
+    console.log('PAC proxy settings applied for chatgpt.com and whatismyip.com');
   });
 
   // Use onAuthRequired to supply credentials for the proxy when needed
@@ -113,6 +113,34 @@ function setupHardcodedProxy() {
   }
 }
 
+// Reads proxy settings from storage (with defaults) and applies them if enabled.
+function setupProxyFromStorage() {
+  chrome.storage.sync.get(['proxyEnabled', 'proxySettings'], function(result) {
+    // Default values
+    let enabled = (result.proxyEnabled === undefined) ? true : result.proxyEnabled;
+    let config = result.proxySettings || {
+      ip: '34.94.178.166',
+      port: 3128,
+      username: 'openaiisbad',
+      password: 'openaiisbad'
+    };
+    if (enabled) {
+      setupProxy(config);
+    } else {
+      chrome.proxy.settings.clear({ scope: 'regular' }, function() {
+        console.log("Proxy settings cleared");
+      });
+    }
+  });
+}
+
 // Apply proxy settings on installation and browser startup.
-chrome.runtime.onInstalled.addListener(setupHardcodedProxy);
-chrome.runtime.onStartup.addListener(setupHardcodedProxy); 
+chrome.runtime.onInstalled.addListener(setupProxyFromStorage);
+chrome.runtime.onStartup.addListener(setupProxyFromStorage);
+
+// Listen for changes in proxy settings and update accordingly.
+chrome.storage.onChanged.addListener(function(changes, area) {
+  if (area === 'sync' && (changes.proxyEnabled || changes.proxySettings)) {
+    setupProxyFromStorage();
+  }
+});

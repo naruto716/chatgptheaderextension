@@ -1,18 +1,12 @@
 # ChatGPT Account Sharing Bypass
 
-This Chrome extension allows you to bypass OpenAI's account sharing detection when using ChatGPT. It achieves this by modifying specific request headers sent to the ChatGPT API, making it appear as if requests are coming from a single, unique user.
+This Chrome extension allows you to bypass OpenAI's account sharing detection when using ChatGPT. It achieves this by modifying specific request headers sent to the ChatGPT API, making it appear as if requests are coming from a single, unique user. In addition, the extension can route traffic through a proxy (using a PAC script) for selected domains such as chatgpt.com and whatismyip.com.
 
-## How it Works
+## How It Works
 
-The extension utilizes the `declarativeNetRequest` API to intercept and modify outgoing requests to the ChatGPT backend. Specifically, it targets requests made to the `/backend-api/conversation` endpoint.
+The extension modifies outgoing requests to the ChatGPT backend by updating headers using the `webRequest` API (Manifest V2, deprecated yet usable, for better proxy support).
 
-The following headers are modified:
-
-*   **`oai-device-id`**: Set to a static, unique UUID (`9b651939-97c7-43fe-9aec-80960cb88ff3`). This prevents OpenAI from identifying multiple users based on different device IDs.
-*   **`oai-language`**: Set to `en-US`. This ensures consistent language settings across all users sharing the account.
-*   **`User-Agent`**: Set to a common User-Agent string (`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36`). This makes it harder for OpenAI to differentiate users based on browser or device information.
-
-These modifications are defined in the `rules.json` file:
+In parallel, the extension leverages proxy settings with a PAC (Proxy Auto-Config) script to route requests for certain domains (e.g., `chatgpt.com` and `whatismyip.com`) through a custom proxy server. The proxy settings—IP, port, username, and password—can all be configured via the popup interface.
 
 ## Installation
 
@@ -24,7 +18,24 @@ These modifications are defined in the `rules.json` file:
 
 ## Usage
 
-Once installed, the extension will automatically modify the necessary headers for requests to `https://chatgpt.com/backend-api/conversation`. No further action is required on your part.
+Once installed, the extension will:
+  
+- Automatically modify the necessary headers for requests to `https://chatgpt.com/backend-api/conversation`.
+- Apply proxy settings on targeted websites (e.g., ChatGPT and WhatIsMyIP) using a PAC script. This makes it easier to verify the proxy is active (by visiting [WhatIsMyIP.com](https://www.whatismyip.com/)).
+
+The extension comes with a settings popup allowing you to:
+  
+- Configure the unique device ID used to spoof the request.
+- Enable/disable the proxy.
+- Update proxy server information (IP, port, username, and password).
+
+Default values are pre-configured, for anyone who spots this public repo, please refrain from abusing my proxy. I don't mind if you use it reasonably. 
+
+## Proxy Information
+
+The proxy functionality applies a PAC script to route only requests going to specific domains (such as `chatgpt.com` and `whatismyip.com`) through the configured proxy. This allows you to test your proxy settings easily, while other sites remain unaffected.
+
+If you disable the proxy using the popup, the extension will clear any applied proxy settings.
 
 ## Disclaimer
 
@@ -34,8 +45,15 @@ This extension is intended for educational purposes only. Bypassing OpenAI's acc
 
 The extension requires the following permissions, as specified in the `manifest.json` file:
 
-*   `declarativeNetRequest`: Allows the extension to modify network requests.
-*   `declarativeNetRequestWithHostAccess`: Grants the extension the ability to modify requests on specific hosts.
-*   `declarativeNetRequestFeedback`: Enables the extension to receive feedback about modified requests.
+- `webRequest`
+- `webRequestBlocking`
+- `storage`
+- `proxy`
+- `<all_urls>`
 
-Additionally, the extension requires host permissions for `https://chatgpt.com/*`:
+In addition to the above, host permissions are required for:
+  
+- `https://chatgpt.com/*`
+- And any additional domains (such as whatismyip.com) that the PAC script targets.
+
+Enjoy developing and testing this extension!

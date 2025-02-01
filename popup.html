@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Device ID Settings</title>
+    <title>Settings</title>
     <style>
         body {
             width: 300px;
@@ -13,13 +13,17 @@
             flex-direction: column;
             gap: 12px;
         }
-        input {
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
             width: calc(100% - 20px);
-            margin-right: 20px;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+        }
+        label {
+            margin-bottom: 4px;
         }
         button {
             padding: 8px 16px;
@@ -48,7 +52,31 @@
             <label for="deviceId">Device ID:</label>
             <input type="text" id="deviceId" placeholder="Enter your device ID">
         </div>
-        <button id="saveButton">Save</button>
+        <button id="saveDeviceButton">Save Device ID</button>
+
+        <h2>Proxy Settings</h2>
+        <div>
+            <label for="proxyEnabled">Enable Proxy:</label>
+            <input type="checkbox" id="proxyEnabled">
+        </div>
+        <div>
+            <label for="proxyIp">Proxy IP:</label>
+            <input type="text" id="proxyIp" placeholder="Proxy IP">
+        </div>
+        <div>
+            <label for="proxyPort">Proxy Port:</label>
+            <input type="number" id="proxyPort" placeholder="Proxy Port">
+        </div>
+        <div>
+            <label for="proxyUsername">Username:</label>
+            <input type="text" id="proxyUsername" placeholder="Username">
+        </div>
+        <div>
+            <label for="proxyPassword">Password:</label>
+            <input type="password" id="proxyPassword" placeholder="Password">
+        </div>
+        <button id="saveProxyButton">Save Proxy Settings</button>
+
         <div id="status" class="status">Settings saved!</div>
     </div>
     <script src="popup.js"></script>
