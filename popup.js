@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const statusDiv = document.getElementById('status');
 
+    const ownConversationsOnlyCheckbox = document.getElementById('ownConversationsOnly');
+    const clearConversationsButton = document.getElementById('clearConversationsButton');
+
     // Set default values
     const defaultDeviceId = '9b651939-97c7-43fe-9aec-80960cb88ff3';
     const defaultProxySettings = {
@@ -35,6 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         proxyPortInput.value = proxySettings.port;
         proxyUsernameInput.value = proxySettings.username;
         proxyPasswordInput.value = proxySettings.password;
+    });
+
+    // Load saved setting for own conversations only
+    chrome.storage.sync.get(['ownConversationsOnly'], (result) => {
+        ownConversationsOnlyCheckbox.checked = result.ownConversationsOnly !== undefined ? result.ownConversationsOnly : true;
     });
 
     // Save Device ID
@@ -76,6 +84,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             proxyEnabled: enabled,
             proxySettings: proxySettings
         });
+        displayStatus();
+    });
+
+    ownConversationsOnlyCheckbox.addEventListener('change', async () => {
+        const checked = ownConversationsOnlyCheckbox.checked;
+        await chrome.storage.sync.set({ ownConversationsOnly: checked });
         displayStatus();
     });
 

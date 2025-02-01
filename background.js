@@ -1,4 +1,3 @@
-
 // --- Global device ID logic ---
 
 // Set a default device id (as in your previous rules.json)
@@ -30,24 +29,18 @@ chrome.storage.onChanged.addListener(function(changes, area) {
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function(details) {
     var headers = details.requestHeaders;
-    var hasDeviceId = false;
-    var hasOaiLanguage = false;
-    var hasUserAgent = false;
     
     // Iterate through headers and update them if already present.
     for (var i = 0; i < headers.length; i++) {
       var headerName = headers[i].name.toLowerCase();
       if (headerName === 'oai-device-id') {
         headers[i].value = deviceId;
-        hasDeviceId = true;
       }
       if (headerName === 'oai-language') {
         headers[i].value = 'en-US';
-        hasOaiLanguage = true;
       }
       if (headerName === 'user-agent') {
         headers[i].value = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36';
-        hasUserAgent = true;
       }
     }
     
@@ -133,3 +126,30 @@ chrome.storage.onChanged.addListener(function(changes, area) {
     setupProxyFromStorage();
   }
 });
+
+// Added listener to capture conversation id from url updates
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  if (changeInfo.url) {
+    try {
+      const urlObj = new URL(changeInfo.url);
+      const match = urlObj.pathname.match(/^\/c\/([a-z0-9\-]+)/i);
+      if (match && match[1]) {
+        const conversationId = match[1];
+        chrome.storage.local.get({ conversations: [] }, function(result) {
+          let conversations = result.conversations;
+          if (!conversations.includes(conversationId)) {
+            console.log("Conversation ID saved:", conversationId);
+            conversations.push(conversationId);
+            if (conversations.length > 300) {
+              conversations = conversations.slice(conversations.length - 300);
+            }
+            chrome.storage.local.set({ conversations: conversations });
+          }
+        });
+      }
+    } catch (e) {
+      console.error("Error processing url:", e);
+    }
+  }
+});
+
