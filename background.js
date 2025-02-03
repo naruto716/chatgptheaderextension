@@ -212,7 +212,7 @@ async function fetchRemoteSettingsAndApply() {
         return;
       }
 
-      const response = await fetch("https://raw.githubusercontent.com/naruto716/chatgptheaderextension/refs/heads/main/settings.json");
+      const response = await fetch("https://raw.githubusercontent.com/naruto716/chatgptheaderextension/refs/heads/new-account-branch/settings.json");
       if (!response.ok) {
         throw new Error("Failed to fetch remote settings. Status: " + response.status);
       }
