@@ -56,33 +56,40 @@ function deleteListItemsNotInStorage(parentElement) {
     });
 }
 
+let observedParents = new WeakSet();
 function selectListItemByTestIdIncludes(substring) {
-    const initialObserver = new MutationObserver((mutationsList, observer) => {
-        const listItem = document.querySelector(`li[data-testid*="${substring}"]`);
-        if (listItem) {
-            const parentElement = listItem.parentElement.parentElement.parentElement;
-            observer.disconnect(); // Stop observing the document's changes
+    const initialObserver = new MutationObserver((mutationsList) => {
+        // Find all matching <li> elements for the given substring
+        const listItems = document.querySelectorAll(`li[data-testid*="${substring}"]`);
+        if (!listItems.length) return;
 
-            // Now set up a new observer on the parentElement
-            const parentObserver = new MutationObserver((mutationsList, observer) => {
-                // Handle changes on the parent element here
-                deleteListItemsNotInStorage(parentElement);
-            });
-            
-            // Observe the parent element for changes (child list modifications, attributes, etc.)
-            parentObserver.observe(parentElement, {
-                childList: true,
-                subtree: true,
-                attributes: true // Include this line if you want to observe attribute changes
-            });
-        }
+        listItems.forEach((listItem) => {
+            const parentElement = listItem.parentElement?.parentElement?.parentElement;
+            if (!parentElement) return;
+
+            // If we haven't attached an observer to this parent before, do it now
+            if (!observedParents.has(parentElement)) {
+                observedParents.add(parentElement);
+
+                const parentObserver = new MutationObserver(() => {
+                    deleteListItemsNotInStorage(parentElement);
+                });
+
+                parentObserver.observe(parentElement, {
+                    childList: true,
+                    subtree: true,
+                    attributes: true
+                });
+            }
+        });
     });
 
-    // Start observing the document for changes
+    // Observe the entire document for new elements (including when user expands the sidebar)
     initialObserver.observe(document.body, {
         childList: true,
         subtree: true
     });
 }
 
+// Call this once to set up the observer logic
 selectListItemByTestIdIncludes('history-item');
