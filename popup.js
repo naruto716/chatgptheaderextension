@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Save Device ID
     saveDeviceButton.addEventListener('click', async () => {
         const deviceId = deviceIdInput.value.trim();
-        
+
         if (!deviceId) {
             showToast('Please enter a valid device ID', true);
             return;
@@ -101,6 +101,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Conversations cleared!');
     });
 
+    // Synchronization Settings
+    const syncEnabledCheckbox = document.getElementById('syncEnabled');
+
+    // Set default values
+    chrome.storage.sync.get(['syncEnabled'], (result) => {
+        syncEnabledCheckbox.checked = result.syncEnabled === undefined ? true : result.syncEnabled;
+    });
+
+    // Save Synchronization Settings
+    syncEnabledCheckbox.addEventListener('change', async () => {
+        const enabled = syncEnabledCheckbox.checked;
+        await chrome.storage.sync.set({ syncEnabled: enabled });
+        enabled ? showToast('Synchronization enabled') : showToast('Synchronization disabled, inform other people if you need to change your device ID', true);
+    });
+
+
+
     /**
      * Displays a toast message.
      * @param {string} message - The message to be displayed in the toast.
@@ -108,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     function showToast(message, isError = false) {
         toastDiv.textContent = message;
-        
+
         // Use bright green (#28a745) for success and red (#D9534F) for error
         toastDiv.style.backgroundColor = isError ? '#D9534F' : '#28a745';
 
@@ -120,4 +137,5 @@ document.addEventListener('DOMContentLoaded', async () => {
             toastDiv.classList.remove('show');
         }, 3000);
     }
-}); 
+});
+

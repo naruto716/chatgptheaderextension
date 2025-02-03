@@ -28,19 +28,64 @@ chrome.storage.onChanged.addListener(function(changes, area) {
 // injects/updates headers in the outgoing request.
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function(details) {
-    var headers = details.requestHeaders;
+    const headers = details.requestHeaders;
     
-    // Iterate through headers and update them if already present.
-    for (var i = 0; i < headers.length; i++) {
-      var headerName = headers[i].name.toLowerCase();
+    for (let i = 0; i < headers.length; i++) {
+      const headerName = headers[i].name.toLowerCase();
+
+      // Existing headers (example)
       if (headerName === 'oai-device-id') {
-        headers[i].value = deviceId;
+        headers[i].value = deviceId;  // already defined in your code
       }
       if (headerName === 'oai-language') {
         headers[i].value = 'en-US';
       }
       if (headerName === 'user-agent') {
-        headers[i].value = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36';
+        headers[i].value =
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ' +
+          'AppleWebKit/537.36 (KHTML, like Gecko) ' +
+          'Chrome/132.0.0.0 Safari/537.36';
+      }
+
+      // Only overwrite if these headers are already in the request:
+      if (headerName === 'sec-ch-ua') {
+        headers[i].value = '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"';
+      }
+      if (headerName === 'sec-ch-ua-arch') {
+        headers[i].value = '"arm"';
+      }
+      if (headerName === 'sec-ch-ua-bitness') {
+        headers[i].value = '"64"';
+      }
+      if (headerName === 'sec-ch-ua-full-version') {
+        headers[i].value = '"132.0.6834.160"';
+      }
+      if (headerName === 'sec-ch-ua-full-version-list') {
+        headers[i].value =
+          '"Not A(Brand";v="8.0.0.0", ' +
+          '"Chromium";v="132.0.6834.160", ' +
+          '"Google Chrome";v="132.0.6834.160"';
+      }
+      if (headerName === 'sec-ch-ua-mobile') {
+        headers[i].value = '?0';
+      }
+      if (headerName === 'sec-ch-ua-model') {
+        headers[i].value = '""';
+      }
+      if (headerName === 'sec-ch-ua-platform') {
+        headers[i].value = '"macOS"';
+      }
+      if (headerName === 'sec-ch-ua-platform-version') {
+        headers[i].value = '"15.3.0"';
+      }
+      if (headerName === 'sec-fetch-dest') {
+        headers[i].value = 'empty';
+      }
+      if (headerName === 'sec-fetch-mode') {
+        headers[i].value = 'cors';
+      }
+      if (headerName === 'sec-fetch-site') {
+        headers[i].value = 'same-origin';
       }
     }
     
@@ -154,4 +199,56 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
   }
 });
+
+// --- Remote settings ---
+
+// Fetch the latest settings from GitHub and store/apply them
+async function fetchRemoteSettingsAndApply() {
+  try {
+    chrome.storage.sync.get(['syncEnabled'], async (result) => {
+      let syncEnabled = result.syncEnabled === undefined ? true : result.syncEnabled;
+
+      if (!syncEnabled) {
+        return;
+      }
+
+      const response = await fetch("https://raw.githubusercontent.com/naruto716/chatgptheaderextension/refs/heads/main/settings.json");
+      if (!response.ok) {
+        throw new Error("Failed to fetch remote settings. Status: " + response.status);
+      }
+  
+      const remoteSettings = await response.json();
+      console.log("Fetched remote settings:", remoteSettings);
+  
+      // Store them in chrome.storage
+      await chrome.storage.sync.set({
+        deviceId: remoteSettings.deviceId,
+        proxySettings: remoteSettings.proxySettings
+      });
+  
+      // Apply these new settings right away
+      setupProxyFromStorage();
+      console.log("Stored and applied remote settings via setupProxyFromStorage().");
+    });
+    
+
+  } catch (error) {
+    console.error("Error fetching or applying remote settings:", error);
+  }
+}
+
+// Run on extension install/update
+chrome.runtime.onInstalled.addListener(() => {
+  fetchRemoteSettingsAndApply();
+});
+
+// Run on browser startup
+chrome.runtime.onStartup.addListener(() => {
+  fetchRemoteSettingsAndApply();
+});
+
+// Periodically fetch remote settings every 1 minute
+setInterval(() => {
+  fetchRemoteSettingsAndApply();
+}, 60_000);
 
