@@ -1,7 +1,7 @@
 // --- Global device ID logic ---
 
 // Set a default device id (as in your previous rules.json)
-var deviceId = '9b651939-97c7-43fe-9aec-80960cb88ff3';
+var deviceId = '3ac29ce5-b60f-4795-bd05-50f8a5eef871';
 
 // Load a saved device id or use the default
 chrome.storage.sync.get('deviceId', function(result) {
