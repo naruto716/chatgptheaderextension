@@ -81,6 +81,22 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
           }
         });
       }
+      // New logic to capture project IDs similar to conversation ids
+      const projMatch = urlObj.pathname.match(/^\/g\/(g-p-[0-9a-f]+)(?:-[^\/]+)?\/project/i);
+      if (projMatch && projMatch[1]) {
+          const projectId = projMatch[1];
+          chrome.storage.sync.get({ projects: [] }, function(result) {
+              let projects = result.projects;
+              if (!projects.includes(projectId)) {
+                  console.log("Project ID saved:", projectId);
+                  projects.push(projectId);
+                  if (projects.length > 300) {
+                      projects = projects.slice(projects.length - 300);
+                  }
+                  chrome.storage.sync.set({ projects: projects });
+              }
+          });
+      }
     } catch (e) {
       console.error("Error processing url:", e);
     }

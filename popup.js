@@ -55,6 +55,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Conversations cleared!');
     });
 
+    // Added new code for project settings (logic identical to conversations)
+    const showProjectsCheckbox = document.getElementById('showProjects');
+    const clearProjectsButton = document.getElementById('clearProjectsButton');
+
+    // Load saved setting for showing projects
+    chrome.storage.sync.get(['showProjects'], (result) => {
+        showProjectsCheckbox.checked = result.showProjects !== undefined
+            ? result.showProjects
+            : true;
+    });
+
+    showProjectsCheckbox.addEventListener('change', async () => {
+        const checked = showProjectsCheckbox.checked;
+        await chrome.storage.sync.set({ showProjects: checked });
+        showToast('Project preference updated!');
+    });
+
+    // Clear stored projects
+    clearProjectsButton.addEventListener('click', async () => {
+        await chrome.storage.sync.remove('projects');
+        showToast('Projects cleared!');
+    });
+
     // Synchronization Settings
     const syncEnabledCheckbox = document.getElementById('syncEnabled');
 

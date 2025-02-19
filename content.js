@@ -9,6 +9,12 @@ chrome.storage.sync.get(['ownConversationsOnly'], (result) => {
     : true;
 });
 
+// Added: global flag for showing projects
+let showProjects = true;
+chrome.storage.sync.get(['showProjects'], (result) => {
+  showProjects = (result.showProjects !== undefined) ? result.showProjects : true;
+});
+
 chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'sync' && changes.ownConversationsOnly) {
       showOwnConversationsOnly = changes.ownConversationsOnly.newValue;
@@ -18,6 +24,12 @@ chrome.storage.onChanged.addListener((changes, area) => {
             const parentElement = listItem.parentElement.parentElement.parentElement;
             deleteListItemsNotInStorage(parentElement);
         }   
+      }
+    } else if (area === 'sync' && changes.showProjects) {  // Added block for projects
+      showProjects = changes.showProjects.newValue;
+      const projectList = document.querySelector('[aria-labelledby="snorlax-heading"]');
+      if (projectList) {
+          deleteProjectNotInStorage(projectList);
       }
     }
   });
@@ -56,6 +68,27 @@ function deleteListItemsNotInStorage(parentElement) {
     });
 }
 
+function deleteProjectNotInStorage(parentElement) {
+    if (!showProjects) return;
+    chrome.storage.sync.get({ projects: [] }, function(result) {
+        const storedProjects = result.projects;
+        
+        const projectItems = parentElement.querySelectorAll('div');
+        projectItems.forEach(element => {
+            const anchor = element.querySelector('a[href^="/g/"]');
+            if (anchor) {
+                const href = anchor.getAttribute('href');
+                const projectId = href.match(/\/g\/(g-p-[0-9a-f]+)(?:-[^\/]+)?\/project/i)?.[1];
+                if (projectId && !storedProjects.includes(projectId)) {
+                    element.style.display = 'none';
+                } else {
+                    element.style.display = ''; // Reset display if project is in storage
+                }
+            }
+        });
+    });
+}
+
 let observedParents = new WeakSet();
 function selectListItemByTestIdIncludes(substring) {
     const initialObserver = new MutationObserver((mutationsList) => {
@@ -82,6 +115,20 @@ function selectListItemByTestIdIncludes(substring) {
                 });
             }
         });
+
+        // Observe the project list
+        const projectList = document.querySelector('[aria-labelledby="snorlax-heading"]');
+        if (projectList) {
+            const projectObserver = new MutationObserver(() => {
+                deleteProjectNotInStorage(projectList);
+            });
+
+            projectObserver.observe(projectList, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+        }
     });
 
     // Observe the entire document for new elements (including when user expands the sidebar)
