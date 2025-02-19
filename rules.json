@@ -8,7 +8,7 @@
         {
           "header": "oai-device-id",
           "operation": "set",
-          "value": "9b651939-97c7-43fe-9aec-80960cb88ff3"
+          "value": "3ac29ce5-b60f-4795-bd05-50f8a5eef871"
         },
         {
           "header": "oai-language",
@@ -19,6 +19,51 @@
           "header": "User-Agent",
           "operation": "set",
           "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+        },
+        {
+          "header": "sec-ch-ua",
+          "operation": "set",
+          "value": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Google Chrome\";v=\"132\""
+        },
+        {
+          "header": "sec-ch-ua-arch",
+          "operation": "set",
+          "value": "\"arm\""
+        },
+        {
+          "header": "sec-ch-ua-bitness",
+          "operation": "set",
+          "value": "\"64\""
+        },
+        {
+          "header": "sec-ch-ua-full-version",
+          "operation": "set",
+          "value": "\"132.0.6834.160\""
+        },
+        {
+          "header": "sec-ch-ua-full-version-list",
+          "operation": "set",
+          "value": "\"Not A(Brand\";v=\"8.0.0.0\", \"Chromium\";v=\"132.0.6834.160\", \"Google Chrome\";v=\"132.0.6834.160\""
+        },
+        {
+          "header": "sec-ch-ua-mobile",
+          "operation": "set",
+          "value": "?0"
+        },
+        {
+          "header": "sec-ch-ua-model",
+          "operation": "set",
+          "value": "\"\""
+        },
+        {
+          "header": "sec-ch-ua-platform",
+          "operation": "set",
+          "value": "\"macOS\""
+        },
+        {
+          "header": "sec-ch-ua-platform-version",
+          "operation": "set",
+          "value": "\"15.3.0\""
         }
       ]
     },

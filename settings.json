@@ -1,9 +1,3 @@
 {
-    "deviceId": "3ac29ce5-b60f-4795-bd05-50f8a5eef871",
-    "proxySettings": {
-        "ip": "34.71.100.127",
-        "port": 3128,
-        "username": "fuckyouopenai",
-        "password": "fuckyouopenai"
-    }
+    "deviceId": "3ac29ce5-b60f-4795-bd05-50f8a5eef871"
 }

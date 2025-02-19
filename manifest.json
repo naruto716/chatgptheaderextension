@@ -1,21 +1,22 @@
 {
-  "name": "ChatGPT Account Sharing Bypass",
-  "version": "1.5.1",
-  "manifest_version": 2,
-  "description": "Bypass OpenAI's account sharing detection with spoofed device ID and IP address. Also allows you to only display your own conversations.",
+  "name": "ChatGPT No Tracking",
+  "version": "1.6.0",
+  "manifest_version": 3,
+  "description": "Enhance your ChatGPT journey with advanced session management and personalized conversation filtering. Disable tracking and improve your privacy.",
   "permissions": [
-    "webRequest",
-    "webRequestBlocking",
-    "storage",
-    "proxy",
-    "<all_urls>"
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "declarativeNetRequestFeedback",
+    "storage"
   ],
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": true
-  },
-  "browser_action": {
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+  "action": {
     "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
