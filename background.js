@@ -18,8 +18,30 @@ chrome.storage.onChanged.addListener(function(changes, area) {
   if (area === 'sync' && changes.deviceId) {
     console.log('Device ID updated:', changes.deviceId.newValue);
     updateRulesWithSavedDeviceId();
+    // Also update the cookie with the new device ID
+    updateDeviceIdCookie(changes.deviceId.newValue);
   }
 });
+
+// New function to update the oai-did cookie to match the device ID
+async function updateDeviceIdCookie(deviceId) {
+  try {
+    // Set the oai-did cookie to match the deviceId
+    await chrome.cookies.set({
+      url: 'https://chatgpt.com/',
+      name: 'oai-did',
+      value: deviceId,
+      domain: '.chatgpt.com',
+      path: '/',
+      secure: true,
+      httpOnly: false,
+      sameSite: 'lax'
+    });
+    console.log('Updated oai-did cookie to:', deviceId);
+  } catch (error) {
+    console.error('Error updating oai-did cookie:', error);
+  }
+}
 
 // Insert updateRulesWithSavedDeviceId to update dynamic rules for header modifications
 async function updateRulesWithSavedDeviceId() {
@@ -31,6 +53,10 @@ async function updateRulesWithSavedDeviceId() {
         console.log('No saved device ID found, using default');
         await chrome.storage.sync.set({ deviceId: DEFAULT_DEVICE_ID });
     }
+    
+    // Also update the cookie whenever we update the rules
+    updateDeviceIdCookie(deviceId);
+    
     const response = await fetch(chrome.runtime.getURL('rules.json'));
     const rules = await response.json();
     rules[0].action.requestHeaders.forEach(header => {
