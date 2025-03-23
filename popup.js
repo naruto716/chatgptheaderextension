@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const clearConversationsButton = document.getElementById('clearConversationsButton');
 
     // Set default values
-    const defaultDeviceId = '3ac29ce5-b60f-4795-bd05-50f8a5eef871';
+    const defaultDeviceId = 'e66938fc-6bd2-46d8-8ab3-6ab7967d185b';
 
     // Load saved device ID or use default
     chrome.storage.sync.get(['deviceId'], (result) => {

@@ -1,7 +1,7 @@
 // --- Global device ID logic ---
 
 // Removed global deviceId variable and its chrome.storage.sync.get block
-// var deviceId = '3ac29ce5-b60f-4795-bd05-50f8a5eef871';
+// var deviceId = 'e66938fc-6bd2-46d8-8ab3-6ab7967d185b';
 // chrome.storage.sync.get('deviceId', function(result) {
 //   if (result.deviceId) {
 //     deviceId = result.deviceId;
@@ -37,16 +37,30 @@ async function updateDeviceIdCookie(deviceId) {
       httpOnly: false,
       sameSite: 'lax'
     });
+    
+    // Also set the oai-sh-c-i cookie to a specific value
+    await chrome.cookies.set({
+      url: 'https://chatgpt.com/',
+      name: 'oai-sh-c-i',
+      value: '67abfeea-d654-8012-8ab2-1de77fa5a265',
+      domain: '.chatgpt.com',
+      path: '/',
+      secure: true,
+      httpOnly: false,
+      sameSite: 'lax'
+    });
+    
     console.log('Updated oai-did cookie to:', deviceId);
+    console.log('Updated oai-sh-c-i cookie to: 67abfeea-d654-8012-8ab2-1de77fa5a265');
   } catch (error) {
-    console.error('Error updating oai-did cookie:', error);
+    console.error('Error updating cookies:', error);
   }
 }
 
 // Insert updateRulesWithSavedDeviceId to update dynamic rules for header modifications
 async function updateRulesWithSavedDeviceId() {
     // Updated default to match popup default
-    const DEFAULT_DEVICE_ID = '3ac29ce5-b60f-4795-bd05-50f8a5eef871';
+    const DEFAULT_DEVICE_ID = 'e66938fc-6bd2-46d8-8ab3-6ab7967d185b';
     const result = await chrome.storage.sync.get('deviceId');
     const deviceId = result.deviceId || DEFAULT_DEVICE_ID;
     if (!result.deviceId) {
